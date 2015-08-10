@@ -1,0 +1,134 @@
+#!/bin/bash
+
+# Slackware Service startup script for Slackware Linux
+#
+# Copyright 2015 Giuseppe Di Terlizzi <giuseppe.diterlizzi>
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+SERVICES_CONFIG="/etc/slack-services.conf"
+
+. $SERVICES_CONFIG
+
+
+cmd() {
+  if [ "$QUIET" = "YES" ]; then
+    ( . $1 $2 >/dev/null 2>&1 || true )
+  else
+    ( . $1 $2 || true )
+  fi
+}
+
+
+svc_start() {
+  for SERVICE in $SERVICES; do
+    SCRIPT="/etc/rc.d/rc.$SERVICE"
+    if [ -x "$SCRIPT" ]; then
+      echo "Starting $SERVICE:  $SCRIPT start"
+      cmd $SCRIPT start
+    fi
+  done
+}
+
+
+svc_stop() {
+  SERVICES=$(echo "$SERVICES " | tac -s ' ')
+  for SERVICE in $SERVICES; do
+    SCRIPT="/etc/rc.d/rc.$SERVICE"
+    if [ -x "$SCRIPT" ]; then
+      echo "Stopping $SERVICE:  $SCRIPT stop"
+      cmd $SCRIPT stop
+    fi
+  done
+}
+
+
+svc_status() {
+
+  echo "Services enabled on $(hostname):"
+  echo
+
+  for SERVICE in $SERVICES; do
+    if [ -x "/etc/rc.d/rc.$SERVICE" ]; then
+      echo "  [x] $SERVICE"
+    else
+      echo "  [ ] $SERVICE"
+    fi
+  done
+
+}
+
+
+svc_list() {
+  echo "Available services on $(hostname):"
+  echo " $SERVICES" | sed -s 's/\ /\n\t/g' 
+}
+
+
+svc_enable() {
+  chmod +x /etc/rc.d/rc.$1 || echo "FAILED!"
+  exit 0
+}
+
+
+svc_disable() {
+  chmod -x /etc/rc.d/rc.$1 || echo "FAILED!"
+  exit 0
+}
+
+
+case "$1" in
+
+  start)
+    svc_start
+  ;;
+
+  stop)
+    svc_stop
+  ;;
+
+  restart)
+    svc_stop
+    echo
+    sleep 1
+    svc_start
+  ;;
+
+  status)
+    svc_status
+  ;;
+
+  list)
+    svc_list
+  ;;
+
+  enable)
+    svc_enable $2
+  ;;
+
+  disable)
+    svc_disable $2
+  ;;
+
+  *)
+    echo "Usage: $0 (start|stop|restart|status|list|enable|disable)"
+
+esac
+
