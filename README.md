@@ -91,11 +91,11 @@ Starting vboxautostart-service:  /etc/rc.d/rc.vboxautostart-service start
 
 ```
 # /etc/rc.d/rc.service stop
-Stopping zram:  /etc/rc.d/rc.zram stop
-Stopping memcached:  /etc/rc.d/rc.memcached stop
-Stopping postgresql:  /etc/rc.d/rc.postgresql stop
-Stopping libvirt:  /etc/rc.d/rc.libvirt stop
-Stopping vboxdrv:  /etc/rc.d/rc.vboxdrv stop
-Stopping vboxballoonctrl-service:  /etc/rc.d/rc.vboxballoonctrl-service stop
 Stopping vboxautostart-service:  /etc/rc.d/rc.vboxautostart-service stop
+Stopping vboxballoonctrl-service:  /etc/rc.d/rc.vboxballoonctrl-service stop
+Stopping vboxdrv:  /etc/rc.d/rc.vboxdrv stop
+Stopping libvirt:  /etc/rc.d/rc.libvirt stop
+Stopping postgresql:  /etc/rc.d/rc.postgresql stop
+Stopping memcached:  /etc/rc.d/rc.memcached stop
+Stopping zram:  /etc/rc.d/rc.zram stop
 ```
