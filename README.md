@@ -1,9 +1,9 @@
 # slack-service
-**Slackware Service "wrapper"**
+**Slackware Linux Service "wrapper"**
 
 ##Installation
 
-Edit ``/etc/rc.d/rc.local`` and remove all user-services and add this code:
+Edit the ``/etc/rc.d/rc.local`` and remove all user-services and add this code:
 
 ```
 if [ -x /etc/rc.d/rc.service ]; then
@@ -15,18 +15,18 @@ fi
 And finally add execution permission:
 
 ```
-# chmod + /etc/rc.d/rc.local
+# chmod + /etc/rc.d/rc.service
 ```
 
 ##Add a service
 
-Edit ``/etc/slack-services.conf`` with the name of user-service present in ``/etc/rc.d`` directory, without the ``rc.`` prefix . Eg:
+Edit ``SERVICES`` variable present in ``/etc/slack-services.conf`` with the name of user-service present in ``/etc/rc.d`` directory, without the ``rc.`` prefix . Eg:
 
 ```
 SERVICES="vboxdrv memacached postgresql"
 ```
 
-##The rc.service
+##The rc.service script
 
 ***Display the enabled service on your machine***
 
@@ -45,7 +45,7 @@ Services enabled on darkstar:
   [ ] vboxweb-service
 ```
 
-***Display the available service in yout machine***
+***Display the available service in your machine***
 
 ```
 # sh /etc/rc.d/rc.service list  
